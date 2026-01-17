@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}OdontoCare - Carga Masiva CSV{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-arrow-up"></i> Carga Masiva desde CSV</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-4">
+                    Suba un archivo CSV para cargar multiples registros de una vez. 
+                    El archivo debe tener las columnas correspondientes segun el tipo de datos.
+                </p>
+                
+                <form method="POST" action="{{ url_for('procesar_carga_masiva') }}" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="tipo" class="form-label">
+                            <i class="bi bi-list-check"></i> Tipo de Datos *
+                        </label>
+                        <select name="tipo" id="tipo" class="form-select" required onchange="mostrarFormato()">
+                            <option value="">Seleccione el tipo de datos</option>
+                            <option value="usuarios">Usuarios (admin/secretaria)</option>
+                            <option value="doctores">Doctores</option>
+                            <option value="pacientes">Pacientes</option>
+                            <option value="centros">Centros Medicos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="archivo_csv" class="form-label">
+                            <i class="bi bi-file-earmark-spreadsheet"></i> Archivo CSV *
+                        </label>
+                        <input type="file" name="archivo_csv" id="archivo_csv" 
+                               class="form-control" accept=".csv" required>
+                    </div>
+                    
+                    <!-- Formato esperado -->
+                    <div id="formato_usuarios" class="alert alert-light" style="display: none;">
+                        <h6><i class="bi bi-info-circle"></i> Formato esperado para Usuarios:</h6>
+                        <code>nombre_usuario,password,rol</code>
+                        <br><small class="text-muted">Roles validos: admin, secretaria</small>
+                    </div>
+                    
+                    <div id="formato_doctores" class="alert alert-light" style="display: none;">
+                        <h6><i class="bi bi-info-circle"></i> Formato esperado para Doctores:</h6>
+                        <code>nombre,especialidad,nombre_usuario,password</code>
+                        <br><small class="text-muted">nombre_usuario y password son opcionales para crear acceso al sistema</small>
+                    </div>
+                    
+                    <div id="formato_pacientes" class="alert alert-light" style="display: none;">
+                        <h6><i class="bi bi-info-circle"></i> Formato esperado para Pacientes:</h6>
+                        <code>nombre,telefono,estado,nombre_usuario,password</code>
+                        <br><small class="text-muted">estado: ACTIVO o INACTIVO. nombre_usuario y password son opcionales</small>
+                    </div>
+                    
+                    <div id="formato_centros" class="alert alert-light" style="display: none;">
+                        <h6><i class="bi bi-info-circle"></i> Formato esperado para Centros:</h6>
+                        <code>nombre,direccion</code>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-info text-white">
+                            <i class="bi bi-upload"></i> Cargar Datos
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Ejemplos de archivos -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> Archivos de Ejemplo</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Puede descargar estos archivos de ejemplo como referencia:</p>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <a href="/static/ejemplos/usuarios.csv" class="btn btn-outline-secondary btn-sm w-100" download>
+                            <i class="bi bi-download"></i> usuarios.csv
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <a href="/static/ejemplos/doctores.csv" class="btn btn-outline-secondary btn-sm w-100" download>
+                            <i class="bi bi-download"></i> doctores.csv
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <a href="/static/ejemplos/pacientes.csv" class="btn btn-outline-secondary btn-sm w-100" download>
+                            <i class="bi bi-download"></i> pacientes.csv
+                        </a>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <a href="/static/ejemplos/centros.csv" class="btn btn-outline-secondary btn-sm w-100" download>
+                            <i class="bi bi-download"></i> centros.csv
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function mostrarFormato() {
+    var tipo = document.getElementById('tipo').value;
+    
+    document.getElementById('formato_usuarios').style.display = 'none';
+    document.getElementById('formato_doctores').style.display = 'none';
+    document.getElementById('formato_pacientes').style.display = 'none';
+    document.getElementById('formato_centros').style.display = 'none';
+    
+    if (tipo) {
+        document.getElementById('formato_' + tipo).style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}OdontoCare - Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="login-container position-fixed top-0 start-0 w-100 h-100">
+    <div class="login-card">
+        <div class="text-center mb-4">
+            <i class="bi bi-calendar-heart text-primary" style="font-size: 3rem;"></i>
+            <h2 class="mt-2">OdontoCare</h2>
+            <p class="text-muted">Sistema de Gestión de Citas</p>
+        </div>
+        
+        <form method="POST">
+            <div class="mb-3">
+                <label for="nombre_usuario" class="form-label">
+                    <i class="bi bi-person"></i> Usuario
+                </label>
+                <input type="text" class="form-control form-control-lg" id="nombre_usuario" 
+                       name="nombre_usuario" required placeholder="Ingrese su usuario">
+            </div>
+            
+            <div class="mb-4">
+                <label for="password" class="form-label">
+                    <i class="bi bi-lock"></i> Contraseña
+                </label>
+                <input type="password" class="form-control form-control-lg" id="password" 
+                       name="password" required placeholder="Ingrese su contraseña">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+            </button>
+        </form>
+        
+        <div class="text-center mt-4">
+            <small class="text-muted">
+                <i class="bi bi-info-circle"></i> Usuario por defecto: admin / admin123
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}

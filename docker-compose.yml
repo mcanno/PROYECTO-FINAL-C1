@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  servicio_usuarios:
+    build: ./servicio_usuarios
+    container_name: odontocare_usuarios
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=odontocare-secret-key-2024
+      - JWT_SECRET_KEY=jwt-odontocare-secret-2024
+      - DATABASE_URL=sqlite:///odontocare_usuarios.db
+    volumes:
+      - usuarios_data:/app/instance
+    networks:
+      - odontocare_network
+
+  servicio_citas:
+    build: ./servicio_citas
+    container_name: odontocare_citas
+    ports:
+      - "5001:5001"
+    environment:
+      - SECRET_KEY=odontocare-secret-key-2024
+      - JWT_SECRET_KEY=jwt-odontocare-secret-2024
+      - DATABASE_URL=sqlite:///odontocare_citas.db
+      - SERVICIO_USUARIOS_URL=http://servicio_usuarios:5000
+    volumes:
+      - citas_data:/app/instance
+    depends_on:
+      - servicio_usuarios
+    networks:
+      - odontocare_network
+
+networks:
+  odontocare_network:
+    driver: bridge
+
+volumes:
+  usuarios_data:
+  citas_data:

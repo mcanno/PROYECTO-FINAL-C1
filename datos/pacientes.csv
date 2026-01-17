@@ -1,0 +1,11 @@
+nombre,telefono,estado,nombre_usuario,password
+Juan Pérez Martínez,612345678,ACTIVO,paciente.juan,pac123
+María García López,623456789,ACTIVO,paciente.maria,pac456
+Pedro Sánchez Ruiz,634567890,ACTIVO,paciente.pedro,pac789
+Ana Fernández Torres,645678901,ACTIVO,paciente.ana,pac101
+Luis Rodríguez Gómez,656789012,ACTIVO,paciente.luis,pac202
+Carmen López Díaz,667890123,ACTIVO,paciente.carmen,pac303
+José Martínez Pérez,678901234,INACTIVO,paciente.jose,pac404
+Laura Gómez Sánchez,689012345,ACTIVO,paciente.laura,pac505
+Miguel Torres Fernández,690123456,ACTIVO,paciente.miguel,pac606
+Rosa Díaz Rodríguez,601234567,ACTIVO,paciente.rosa,pac707

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}OdontoCare - Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card usuarios">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-0">{{ stats.usuarios }}</h3>
+                    <p class="mb-0">Usuarios</p>
+                </div>
+                <i class="bi bi-people" style="font-size: 2.5rem; opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card doctores">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-0">{{ stats.doctores }}</h3>
+                    <p class="mb-0">Doctores</p>
+                </div>
+                <i class="bi bi-person-badge" style="font-size: 2.5rem; opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card pacientes">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-0">{{ stats.pacientes }}</h3>
+                    <p class="mb-0">Pacientes</p>
+                </div>
+                <i class="bi bi-person-heart" style="font-size: 2.5rem; opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card centros">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-0">{{ stats.centros }}</h3>
+                    <p class="mb-0">Centros</p>
+                </div>
+                <i class="bi bi-building" style="font-size: 2.5rem; opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if session.get('usuario', {}).get('rol') == 'admin' %}
+                    <a href="{{ url_for('nuevo_usuario') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-person-plus"></i> Nuevo Usuario
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('nuevo_doctor') }}" class="btn btn-outline-success">
+                        <i class="bi bi-person-badge"></i> Nuevo Doctor
+                    </a>
+                    <a href="{{ url_for('nuevo_paciente') }}" class="btn btn-outline-purple" style="border-color: #6f42c1; color: #6f42c1;">
+                        <i class="bi bi-person-heart"></i> Nuevo Paciente
+                    </a>
+                    <a href="{{ url_for('nuevo_centro') }}" class="btn btn-outline-warning">
+                        <i class="bi bi-building"></i> Nuevo Centro
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información del Sistema</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <td><strong>Usuario actual:</strong></td>
+                        <td>{{ session.get('usuario', {}).get('nombre_usuario', '-') }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rol:</strong></td>
+                        <td>
+                            <span class="badge bg-success">{{ session.get('usuario', {}).get('rol', '-') }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sistema:</strong></td>
+                        <td>OdontoCare v1.0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>API Usuarios:</strong></td>
+                        <td><code>http://localhost:5000</code></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}OdontoCare - Listado de Citas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-calendar-check"></i> Gestión de Citas</h2>
+    <a href="{{ url_for('nueva_cita') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nueva Cita
+    </a>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Doctor</label>
+                <select name="id_doctor" class="form-select">
+                    <option value="">Todos</option>
+                    {% for doctor in doctores %}
+                    <option value="{{ doctor.id_doctor }}" {% if filtros.get('id_doctor')|string == doctor.id_doctor|string %}selected{% endif %}>
+                        {{ doctor.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Paciente</label>
+                <select name="id_paciente" class="form-select">
+                    <option value="">Todos</option>
+                    {% for paciente in pacientes %}
+                    <option value="{{ paciente.id_paciente }}" {% if filtros.get('id_paciente')|string == paciente.id_paciente|string %}selected{% endif %}>
+                        {{ paciente.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Estado</label>
+                <select name="estado" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="PROGRAMADA" {% if filtros.get('estado') == 'PROGRAMADA' %}selected{% endif %}>Programada</option>
+                    <option value="COMPLETADA" {% if filtros.get('estado') == 'COMPLETADA' %}selected{% endif %}>Completada</option>
+                    <option value="CANCELADA" {% if filtros.get('estado') == 'CANCELADA' %}selected{% endif %}>Cancelada</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Fecha</label>
+                <input type="date" name="fecha" class="form-control" value="{{ filtros.get('fecha', '') }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-secondary w-100">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Tabla de citas -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha y Hora</th>
+                        <th>Paciente</th>
+                        <th>Doctor</th>
+                        <th>Centro</th>
+                        <th>Motivo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if citas %}
+                        {% for cita in citas %}
+                        <tr>
+                            <td><strong>#{{ cita.id_cita }}</strong></td>
+                            <td>
+                                <i class="bi bi-clock"></i>
+                                {{ cita.fecha[:16].replace('T', ' ') if cita.fecha else '-' }}
+                            </td>
+                            <td>
+                                {% for p in pacientes if p.id_paciente == cita.id_paciente %}
+                                    {{ p.nombre }}
+                                {% else %}
+                                    ID: {{ cita.id_paciente }}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for d in doctores if d.id_doctor == cita.id_doctor %}
+                                    {{ d.nombre }}
+                                {% else %}
+                                    ID: {{ cita.id_doctor }}
+                                {% endfor %}
+                            </td>
+                            <td>ID: {{ cita.id_centro }}</td>
+                            <td>{{ cita.motivo[:30] }}{% if cita.motivo|length > 30 %}...{% endif %}</td>
+                            <td>
+                                {% if cita.estado == 'PROGRAMADA' %}
+                                    <span class="badge badge-programada">Programada</span>
+                                {% elif cita.estado == 'COMPLETADA' %}
+                                    <span class="badge badge-completada">Completada</span>
+                                {% elif cita.estado == 'CANCELADA' %}
+                                    <span class="badge badge-cancelada">Cancelada</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ cita.estado }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if cita.estado != 'CANCELADA' %}
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('editar_cita', id_cita=cita.id_cita) }}" 
+                                       class="btn btn-outline-primary" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="{{ url_for('cancelar_cita', id_cita=cita.id_cita) }}" 
+                                          method="POST" style="display:inline;"
+                                          onsubmit="return confirm('¿Está seguro de cancelar esta cita?');">
+                                        <button type="submit" class="btn btn-outline-danger" title="Cancelar">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
+                                <p class="mt-2 mb-0">No hay citas registradas</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3 text-muted">
+    <small><i class="bi bi-info-circle"></i> Total de citas: {{ citas|length }}</small>
+</div>
+{% endblock %}

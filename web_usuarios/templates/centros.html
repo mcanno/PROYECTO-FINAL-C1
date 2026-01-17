@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}OdontoCare - Centros{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-building"></i> Gestión de Centros Médicos</h2>
+    {% if session.get('usuario', {}).get('rol') == 'admin' %}
+    <a href="{{ url_for('nuevo_centro') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nuevo Centro
+    </a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if centros %}
+                        {% for centro in centros %}
+                        <tr>
+                            <td><strong>#{{ centro.id_centro }}</strong></td>
+                            <td>
+                                <i class="bi bi-building text-warning"></i>
+                                {{ centro.nombre }}
+                            </td>
+                            <td>
+                                <i class="bi bi-geo-alt"></i>
+                                {{ centro.direccion }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center py-4 text-muted">
+                                <i class="bi bi-building" style="font-size: 2rem;"></i>
+                                <p class="mt-2 mb-0">No hay centros registrados</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3 text-muted">
+    <small><i class="bi bi-info-circle"></i> Total de centros: {{ centros|length }}</small>
+</div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}OdontoCare - Nuevo Usuario{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-person-plus"></i> Nuevo Usuario</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="nombre_usuario" class="form-label">
+                            <i class="bi bi-person"></i> Nombre de Usuario *
+                        </label>
+                        <input type="text" name="nombre_usuario" id="nombre_usuario" 
+                               class="form-control" required placeholder="Ej: usuario123">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="bi bi-lock"></i> Contraseña *
+                        </label>
+                        <input type="password" name="password" id="password" 
+                               class="form-control" required placeholder="Ingrese una contraseña segura">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="rol" class="form-label">
+                            <i class="bi bi-shield"></i> Rol *
+                        </label>
+                        <select name="rol" id="rol" class="form-select" required onchange="mostrarCamposAdicionales()">
+                            <option value="">Seleccione un rol</option>
+                            <option value="admin">Administrador</option>
+                            <option value="secretaria">Secretaría</option>
+                            <option value="medico">Médico / Doctor</option>
+                            <option value="paciente">Paciente</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Campos adicionales para Doctor -->
+                    <div id="campos_doctor" style="display: none;">
+                        <hr class="my-3">
+                        <h6 class="text-success"><i class="bi bi-person-badge"></i> Datos del Doctor</h6>
+                        <div class="mb-3">
+                            <label for="nombre_doctor" class="form-label">Nombre Completo *</label>
+                            <input type="text" name="nombre_doctor" id="nombre_doctor" 
+                                   class="form-control" placeholder="Ej: Dr. Juan García López">
+                        </div>
+                        <div class="mb-3">
+                            <label for="especialidad" class="form-label">Especialidad *</label>
+                            <select name="especialidad" id="especialidad" class="form-select">
+                                <option value="">Seleccione especialidad</option>
+                                <option value="Odontología General">Odontología General</option>
+                                <option value="Ortodoncia">Ortodoncia</option>
+                                <option value="Endodoncia">Endodoncia</option>
+                                <option value="Periodoncia">Periodoncia</option>
+                                <option value="Cirugía Oral">Cirugía Oral</option>
+                                <option value="Odontopediatría">Odontopediatría</option>
+                                <option value="Implantología">Implantología</option>
+                                <option value="Estética Dental">Estética Dental</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Campos adicionales para Paciente -->
+                    <div id="campos_paciente" style="display: none;">
+                        <hr class="my-3">
+                        <h6 class="text-purple" style="color: #6f42c1;"><i class="bi bi-person-heart"></i> Datos del Paciente</h6>
+                        <div class="mb-3">
+                            <label for="nombre_paciente" class="form-label">Nombre Completo *</label>
+                            <input type="text" name="nombre_paciente" id="nombre_paciente" 
+                                   class="form-control" placeholder="Ej: María García López">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono *</label>
+                            <input type="tel" name="telefono" id="telefono" 
+                                   class="form-control" placeholder="Ej: 612345678">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select name="estado" id="estado" class="form-select">
+                                <option value="ACTIVO" selected>Activo</option>
+                                <option value="INACTIVO">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Crear Usuario
+                        </button>
+                        <a href="{{ url_for('usuarios') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function mostrarCamposAdicionales() {
+    var rol = document.getElementById('rol').value;
+    var camposDoctor = document.getElementById('campos_doctor');
+    var camposPaciente = document.getElementById('campos_paciente');
+    
+    camposDoctor.style.display = 'none';
+    camposPaciente.style.display = 'none';
+    
+    document.getElementById('nombre_doctor').required = false;
+    document.getElementById('especialidad').required = false;
+    document.getElementById('nombre_paciente').required = false;
+    document.getElementById('telefono').required = false;
+    
+    if (rol === 'medico') {
+        camposDoctor.style.display = 'block';
+        document.getElementById('nombre_doctor').required = true;
+        document.getElementById('especialidad').required = true;
+    } else if (rol === 'paciente') {
+        camposPaciente.style.display = 'block';
+        document.getElementById('nombre_paciente').required = true;
+        document.getElementById('telefono').required = true;
+    }
+}
+</script>
+{% endblock %}

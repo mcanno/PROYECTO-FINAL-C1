@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}OdontoCare - Nueva Cita{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Nueva Cita Médica</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_paciente" class="form-label">
+                                <i class="bi bi-person"></i> Paciente *
+                            </label>
+                            <select name="id_paciente" id="id_paciente" class="form-select" required>
+                                <option value="">Seleccione un paciente</option>
+                                {% for paciente in pacientes %}
+                                    {% if paciente.estado == 'ACTIVO' %}
+                                    <option value="{{ paciente.id_paciente }}">
+                                        {{ paciente.nombre }} - {{ paciente.telefono }}
+                                    </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="id_doctor" class="form-label">
+                                <i class="bi bi-person-badge"></i> Doctor *
+                            </label>
+                            <select name="id_doctor" id="id_doctor" class="form-select" required>
+                                <option value="">Seleccione un doctor</option>
+                                {% for doctor in doctores %}
+                                <option value="{{ doctor.id_doctor }}">
+                                    {{ doctor.nombre }} - {{ doctor.especialidad }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_centro" class="form-label">
+                                <i class="bi bi-building"></i> Centro Médico *
+                            </label>
+                            <select name="id_centro" id="id_centro" class="form-select" required>
+                                <option value="">Seleccione un centro</option>
+                                {% for centro in centros %}
+                                <option value="{{ centro.id_centro }}">
+                                    {{ centro.nombre }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="fecha" class="form-label">
+                                <i class="bi bi-calendar-event"></i> Fecha y Hora *
+                            </label>
+                            <input type="datetime-local" name="fecha" id="fecha" 
+                                   class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="motivo" class="form-label">
+                            <i class="bi bi-chat-text"></i> Motivo de la Consulta *
+                        </label>
+                        <textarea name="motivo" id="motivo" class="form-control" 
+                                  rows="3" required placeholder="Describa el motivo de la cita..."></textarea>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Crear Cita
+                        </button>
+                        <a href="{{ url_for('citas') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
